@@ -128,11 +128,13 @@ function start() {
   console.log(`Dry Run Mode: ${IS_DRY_RUN ? 'YES' : 'NO'}`);
   console.log(`===================================`);
 
-  // Initial check right away
-  checkDiskSpace();
+  // Recursive polling function ensures the previous run completes before scheduling the next, preventing timer stacking
+  async function poll() {
+    await checkDiskSpace();
+    setTimeout(poll, POLLING_INTERVAL_MINUTES * 60 * 1000);
+  }
 
-  // Set interval for subsequent polling
-  setInterval(checkDiskSpace, POLLING_INTERVAL_MINUTES * 60 * 1000);
+  poll();
 }
 
 start();

@@ -9,6 +9,10 @@ module.exports = {
             autorestart: true,
             // If the script crashes too fast, PM2 will stop restarting it (reduces CPU loops)
             max_restarts: 10,
+            // Automatically restart if memory usage exceeds 50MB
+            max_memory_restart: '50M',
+            // Limit Node V8 max heap to 64MB to trigger aggressive garbage collection
+            node_args: '--max-old-space-size=64',
             // Give time for the script to close connections on stop
             kill_timeout: 3000,
             // Log files
