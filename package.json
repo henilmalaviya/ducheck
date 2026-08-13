@@ -8,6 +8,7 @@
     "stop": "pm2 stop ecosystem.config.js",
     "restart": "pm2 restart ecosystem.config.js",
     "logs": "pm2 logs ducheck",
+    "dry-run": "node index.js --dry-run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

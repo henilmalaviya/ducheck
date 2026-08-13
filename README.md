@@ -5,6 +5,8 @@ A lightweight Node.js script to monitor disk space on Linux servers and send ema
 ## Features
 
 - **Continuous Monitoring:** Polls the server's disk space using the native `df` command.
+- **Server Identification:** Differentiates alerts per machine (e.g. `server-nonprod`, `server-prod`) via `SERVER_NAME` or auto-detected system hostname.
+- **Dry-Run Mode:** Simulate alert triggering and verify email contents without invoking Mailgun API calls.
 - **Mailgun Integration:** Instantly sends email alerts when disk usage goes above the set threshold.
 - **Zero Spam:** Only sends one alert per high-usage event; resets once disk space drops below the threshold.
 - **Production Ready:** Configured to run seamlessly with [PM2](https://pm2.keymetrics.io/) using the provided `ecosystem.config.js`.
@@ -39,6 +41,12 @@ THRESHOLD_PERCENTAGE=90
 POLLING_INTERVAL_MINUTES=5
 TARGET_MOUNT_POINT=/
 
+# Server Identifier (differentiates environments like server-nonprod vs server-prod; defaults to system hostname)
+SERVER_NAME=server-prod
+
+# Dry Run Mode (set to true to log alerts without sending actual emails)
+DRY_RUN=false
+
 # Mailgun API settings
 MAILGUN_API_KEY=your_mailgun_api_key
 MAILGUN_DOMAIN=your_mailgun_domain
@@ -50,6 +58,20 @@ FROM_EMAIL=ducheck@your_mailgun_domain # Optional, defaults to ducheck@<MAILGUN_
 
 ## Usage
 
+### Dry-Run Mode
+Test disk space checking and see what email alert *would* be sent without calling Mailgun:
+
+```bash
+pnpm dry-run
+```
+Or via CLI flag / environment variable:
+```bash
+node index.js --dry-run
+# or
+DRY_RUN=true node index.js
+```
+
+### Production Monitoring (PM2)
 You can use the provided npm scripts to manage the PM2 process:
 
 - **Start the monitor (Production mode):**
@@ -69,7 +91,7 @@ You can use the provided npm scripts to manage the PM2 process:
   pnpm logs
   ```
 
-Alternatively, to run it locally in development mode without PM2:
+Alternatively, to run it directly in standard mode:
 ```bash
 node index.js
 ```
